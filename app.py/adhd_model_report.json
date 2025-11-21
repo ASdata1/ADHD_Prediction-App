@@ -1,0 +1,31 @@
+{
+  "model_info": {
+    "name": "Logistic Regression"
+  },
+  "performance": {
+    "test_f1_macro": 0.7434439545138083,
+    "test_roc_auc": 0.8454607664233577,
+    "test_precision_adhd": 0.8297872340425532,
+    "test_recall_adhd": 0.8540145985401459
+  },
+  "model_comparison": {
+    "Logistic Regression": {
+      "validation_f1_macro": 0.8013564516586736,
+      "validation_roc_auc": 0.8717830882352942
+    },
+    "LightGBM": {
+      "validation_f1_macro": 0.7931985294117647,
+      "validation_roc_auc": 0.8616727941176471
+    },
+    "XGBoost": {
+      "validation_f1_macro": 0.7755582987319044,
+      "validation_roc_auc": 0.8575367647058824
+    }
+  },
+  "stability": {
+    "mean_f1_macro": 0.7434439545138083,
+    "std_f1_macro": 0.0,
+    "mean_auc": 0.8454379562043796,
+    "std_auc": 0.0005312871669184518
+  }
+}

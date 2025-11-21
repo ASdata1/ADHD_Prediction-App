@@ -1,0 +1,54 @@
+# ADHD Prediction ML Pipeline - Python Dependencies
+# Generated for ADHD_SEX_Prediction project
+
+# Core Data Science Libraries
+pandas>=1.5.0
+numpy>=1.21.0
+scipy>=1.9.0
+
+# Machine Learning
+scikit-learn>=1.1.0
+imbalanced-learn>=0.9.0
+lightgbm>=3.3.0
+xgboost>=1.6.0
+
+# Data Visualization
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Jupyter Notebook Support
+jupyter>=1.0.0
+notebook>=6.4.0
+ipykernel>=6.15.0
+
+# Model Persistence & Serialization
+joblib>=1.1.0
+
+# Utility Libraries
+collections-extended>=2.0.0
+
+# Web Application (if using Streamlit for deployment)
+streamlit>=1.25.0
+
+# Development Tools
+pytest>=7.0.0
+black>=22.0.0
+flake8>=5.0.0
+
+# Documentation
+sphinx>=5.0.0
+sphinx-rtd-theme>=1.0.0
+
+# Optional: GPU acceleration (uncomment if using GPU)
+# cupy-cuda11x>=11.0.0  # For CUDA 11.x
+# cuml>=22.08.00        # RAPIDS cuML for GPU ML
+
+# Version pinning for reproducibility
+# Uncomment below for exact version matching
+# pandas==1.5.3
+# numpy==1.24.3
+# scikit-learn==1.3.0
+# lightgbm==4.0.0
+# xgboost==1.7.6
+# matplotlib==3.7.1
+# seaborn==0.12.2
