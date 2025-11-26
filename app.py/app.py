@@ -22,24 +22,24 @@ def load_models():
         - model_report: Performance metrics and model information
     """
     try:
-        # Load preprocessing objects that were fitted during training
+        # Load preprocessing objects 
         scaler = joblib.load('scaler.joblib')
         imputer = joblib.load('imputer.joblib')
         pca = joblib.load('pca_connectome.joblib')
         
-        # Load model performance report and configuration
+        # Load model performance report 
         with open('adhd_model_report.json', 'r') as f:
             model_report = json.load(f)
         
         # Extract model information from report
         model_info = model_report['model_info']
-        model_name = model_info['name']  # "Logistic Regression"
+        model_name = model_info['name']  
        
-        # Load the trained model using dynamic filename from report
+        # Load the trained model 
         model_filename = f"{model_name.lower().replace(' ', '_')}_model.joblib"
         trained_model = joblib.load(model_filename)
         
-        # Load feature column definitions to ensure correct preprocessing order
+        # Load feature column definitions 
         with open('quant_cols.json', 'r') as f:
             quant_cols = json.load(f)
         with open('cat_cols.json', 'r') as f:
@@ -57,7 +57,7 @@ def load_models():
         st.error(f"Error loading models: {e}")
         st.stop()
 
-# Load all artifacts needed for prediction pipeline
+# Load all artifacts 
 (scaler, imputer, pca, model, quant_cols, cat_cols, conn_cols, model_report) = load_models()
 
 # --- Streamlit UI ---
@@ -80,7 +80,7 @@ st.sidebar.info(f"""
 - ADHD Recall: {model_report['performance']['test_recall_adhd']:.3f}
 """)
 
-# Optional data dictionary for user reference
+# data dictionary 
 with st.expander("ℹ️ Data Dictionary"):
     try:
         # Load data dictionary to help users understand feature meanings
@@ -91,13 +91,13 @@ with st.expander("ℹ️ Data Dictionary"):
 
 st.write("Please provide the following information:")
 
-# --- User Inputs with organized layout ---
+# --- User Inputs with organised layout ---
 st.subheader("📋 Questionnaire Data")
 
-# Create two-column layout for better space utilization
+# Create two-column layout 
 col1, col2 = st.columns(2)
 
-# Split quantitative columns for two-column input
+# Split quantitative columns =
 mid_point = len(quant_cols) // 2
 
 user_quant = {}
@@ -115,7 +115,7 @@ with col2:
 st.subheader("📝 Categorical Data")
 user_cat = {}
 for col in cat_cols:
-    # Binary categorical variables with clear Yes/No labels
+    # Binary categorical variables with Yes/No labels
     if 'Sex_F' in col:
         user_cat[col] = st.selectbox(
             f"{col}", 
@@ -137,7 +137,7 @@ st.subheader("🧠 Connectome Data")
 st.write("Upload your connectome data as a CSV file:")
 conn_file = st.file_uploader("Upload connectome CSV", type=["csv"])
 
-# Handle connectome data upload or use defaults
+# Handle connectome data
 if conn_file is not None:
     try:
         conn_df = pd.read_csv(conn_file)
@@ -170,7 +170,7 @@ else:
     st.info("ℹ️ Using default values (0.0) for connectome data")
 
 # --- Prepare input data for model prediction ---
-# Combine all user inputs into single DataFrame row
+# Combine all user inputs 
 input_df = pd.DataFrame([{**user_quant, **user_cat, **user_conn}])
 
 # --- Prediction Pipeline ---
@@ -178,21 +178,20 @@ st.markdown("---")
 if st.button("🎯 Predict ADHD", type="primary"):
     try:
         with st.spinner("Processing data"):
-            
-            # Ensure input has all expected columns in correct order
+          
             all_expected_cols = quant_cols + cat_cols + conn_cols
             processed_df = input_df.reindex(columns=all_expected_cols, fill_value=0.0)
             
-            # Step 1: Scale quantitative features using fitted scaler
+            # Scale quantitative features using fitted scaler
             if len(quant_cols) > 0:
                 processed_df[quant_cols] = scaler.transform(processed_df[quant_cols])
             
-            # Step 2: Impute missing values for questionnaire data
+            # : Impute missing values for questionnaire data
             non_conn_cols = quant_cols + cat_cols
             if len(non_conn_cols) > 0:
                 processed_df[non_conn_cols] = imputer.transform(processed_df[non_conn_cols])
             
-            # Step 3: Apply PCA dimensionality reduction to connectome features
+            #  Apply PCA dimensionality reduction to connectome features
             if len(conn_cols) > 0:
                 conn_pca = pca.transform(processed_df[conn_cols])
                 # Create DataFrame with PCA component names
@@ -203,7 +202,7 @@ if st.button("🎯 Predict ADHD", type="primary"):
                 processed_df = processed_df.drop(columns=conn_cols)
                 processed_df = pd.concat([processed_df, conn_pca_df], axis=1)
             
-            # Step 4: Generate prediction probability and classification
+            # Generate prediction probability and classification
             proba = model.predict_proba(processed_df)[0][1]  # Probability of ADHD class
             prediction = int(proba >= 0.5)  # Binary classification using 0.5 threshold
         
@@ -278,13 +277,13 @@ if st.button("🎯 Predict ADHD", type="primary"):
         st.error(f"Error during prediction: {str(e)}")
         st.error("Please check that all inputs are valid and try again.")
         
-        # Debug information for troubleshooting
-        with st.expander("🐛 Debug Information"):
+        
+        with st.expander(" Debug Information"):
             st.write(f"Input DataFrame shape: {input_df.shape}")
             st.write(f"Input DataFrame columns: {list(input_df.columns)}")
             st.write("Error details:", str(e))
 
-# Medical disclaimer for ethical AI deployment
+# Medical disclaimer section
 st.markdown("---")
 st.markdown("""
 **⚠️ Medical Disclaimer:** This tool is for research and educational purposes only. 
